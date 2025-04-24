@@ -25,9 +25,23 @@ router.get('/', async (req, res) => {
 
 router.get('/create', async(req, res) => {
   try{
-    res.render('create')
+    const [datos] = await db.query("SELECT * FROM marcas")
+    res.render('create', { marcas: datos })
   }
   catch(error){
+    console.error(error)
+  }
+})
+
+router.post('/create', async(req, res) => {
+  try{
+    //Obtener los datos
+    const {marcas, modelo, color, combustible, afabricacion, condicion} = req.body
+    //Guardar registro
+    await db.query(`INSERT INTO vehiculos (idmarca, modelo, color, combustible, afabricacion, condicion) VALUES (?,?,?,?,?,?)`, 
+      [marcas, modelo, color, combustible, afabricacion, condicion])
+    res.redirect('/')
+  }catch(error){
     console.error(error)
   }
 })

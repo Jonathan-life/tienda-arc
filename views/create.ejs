@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 
-<form action="" id="formulario-registro" autocomplete="off" method="post">
+<form action="/create" id="formulario-registro" autocomplete="off" method="post">
   <div class="card mt-2">
     <div class="card-header"><strong>Registro</strong></div>
 
@@ -10,9 +10,11 @@
         <div class="col-md-6 mb-2">
           <div class="form-floating">
             <select name="marcas" id="marcas" class="form-select" required>
-              <option value="" disabled>Seleccione</option>
+              <option value="" selected disabled>Seleccione</option>
               <!-- Las marcas se cargan desde la BD -->
-              <option value="1" selected>KIA</option>
+              <% marcas.forEach(element => { %>
+                <option value="<%= element.idmarca %>"><%= element.marca %></option>
+              <% }) %>
             </select>
             <label for="form-label">Marcas</label>
           </div>
@@ -92,7 +94,7 @@
         cancelButtonColor: '#c0392b'
       }).then((result) => {
         if (result.isConfirmed){
-          console.log("Guardando datos...")
+          formulario.submit()
         }
       })
 
