@@ -1,11 +1,27 @@
-const express = require('express')
-const router = express.Router()
-const db = require('../config/database')
+const express = require('express') //Framework
+const router = express.Router() //Rutas
+const db = require('../config/database') //Acceso BD
 
 router.get('/', async (req, res) => {
-  //deserialización
-  const [vehiculos] = await db.query(`SELECT * FROM vehiculos`)
-  res.send(vehiculos)
+  try{
+    const query = `
+    SELECT
+      V.idvehiculo,
+        M.marca,
+        V.modelo,
+        V.color,
+        V.combustible,
+        V.afabricacion,
+        V.condicion
+      FROM vehiculos V
+        INNER JOIN marcas M ON V.idmarca = M.idmarca
+    `
+    const [vehiculos] = await db.query(query)
+    res.render('index', {vehiculos})
+  }catch(error){
+    console.error(error)
+  }
+
 });
 
 module.exports = router
