@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'tallerchincha'
+  database: 'tienda_ropa'
 })
 
 //Verificar la conexión
