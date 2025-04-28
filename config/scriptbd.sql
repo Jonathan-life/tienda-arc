@@ -24,9 +24,13 @@ INSERT INTO marcas (marca) VALUES
 	('KIA'),		-- 1
     ('Toyota'); 	-- 2
 
+INSERT INTO marcas (marca) VALUES 
+	('Nissan'),		-- 3
+    ('Hyundai'); 	-- 4
+
 INSERT INTO vehiculos (idmarca, modelo, color, combustible, afabricacion, condicion) VALUES
 	(1, 'Sorento', 'negro', 'Gasolina', '2023', 'Seminuevo'),
     (2, 'Hilux', 'blanco', 'Diesel', '2025', 'Nuevo');
     
-
+SELECT * FROM vehiculos;
 

@@ -1,1 +1,107 @@
-<p>Hola</p>
+<%- include('partials/header') %>
+
+<form action="/edit/<%= vehiculo.idvehiculo %>" id="formulario-registro" autocomplete="off" method="post">
+  <div class="card mt-2">
+    <div class="card-header"><strong>Actualización</strong></div>
+
+    <div class="card-body">
+      
+      <div class="row g-2">
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <select name="marcas" id="marcas" class="form-select" required>
+              <option value="" selected disabled>Seleccione</option>
+              <!-- Las marcas se cargan desde la BD -->
+              <% marcas.forEach(element => { %>
+
+                <option value="<%= element.idmarca %>" <%= element.idmarca == vehiculo.idmarca ? 'selected':'' %>  ><%= element.marca %></option>
+
+              <% }) %>
+            </select>
+            <label for="form-label">Marcas</label>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div class="form-floating">
+            <input type="text" id="modelo" value="<%= vehiculo.modelo %>" name="modelo" class="form-control" placeholder="Modelo" required>
+            <label for="form-label">Modelo</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-md-4 mb-2">
+          <div class="form-floating">
+            <input type="text" id="color" value="<%= vehiculo.color %>" name="color" class="form-control" placeholder="Color" required>
+            <label for="form-label">Color</label>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <div class="form-floating">
+            <select name="combustible" id="combustible" class="form-select" required>
+              <option value="">Seleccione</option>
+              <option value="Diesel"   <%= vehiculo.combustible == 'Diesel' ? 'selected':'' %>  >Diesel</option>
+              <option value="Gasolina" <%= vehiculo.combustible == 'Gasolina' ? 'selected':'' %> >Gasolina</option>
+              <option value="GLP"      <%= vehiculo.combustible == 'GLP' ? 'selected':'' %> >GLP</option>
+              <option value="GNV"      <%= vehiculo.combustible == 'GNV' ? 'selected':'' %> >GNV</option>
+              <option value="Híbrido"  <%= vehiculo.combustible == 'Híbrido' ? 'selected':'' %> >Híbrido</option>
+            </select>
+            <label for="form-label">Combustible</label>
+          </div>
+        </div>
+        <div class="col-md-4 mb-2">
+          <div class="form-floating">
+            <input type="text" minlength="4" value="<%= vehiculo.afabricacion %>" maxlength="4" pattern="[0-9]+" id="afabricacion" name="afabricacion" class="form-control" placeholder="Año de fabricación" required>
+            <label for="form-label">Año de fabricación</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-floating">
+            <select name="condicion" id="condicion" class="form-select" required>
+              <option value="Nuevo" <%= vehiculo.condicion == 'Nuevo' ? 'selected':'' %> >Nuevo</option>
+              <option value="Seminuevo" <%= vehiculo.condicion == 'Seminuevo' ? 'selected':'' %> >Seminuevo</option>
+            </select>
+            <label for="form-label">Condición</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+      <a href="/" class="btn btn-sm btn-secondary">Cancelar</a>
+    </div>
+  </div>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.querySelector("#formulario-registro")
+
+    formulario.addEventListener("submit", (event) => {
+      event.preventDefault()
+
+      Swal.fire({
+        title: 'Vehículos',
+        text: '¿Está seguro de actualizar?',
+        icon: 'question',
+        footer: 'SENATI - Ingeniería Software',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#2980b9',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#c0392b'
+      }).then((result) => {
+        if (result.isConfirmed){
+          formulario.submit()
+        }
+      })
+
+    })
+  })
+</script>
+
+<%- include('partials/footer') %>

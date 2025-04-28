@@ -25,13 +25,43 @@
         <td><%= vehiculo.afabricacion %></td>
         <td><%= vehiculo.condicion %></td>
         <td>
-          <a href="#" class="btn btn-sm btn-info">Editar</a>
-          <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+          <a href="/edit/<%= vehiculo.idvehiculo %>" class="btn btn-sm btn-info">Editar</a>
+          <a href="/delete/<%= vehiculo.idvehiculo %>" class="btn btn-sm btn-danger delete">Eliminar</a>
         </td>
       </tr>
       <% }) %>
     </tbody>
   </table>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const enlacesEliminar = document.querySelectorAll(".delete");
+
+    enlacesEliminar.forEach((enlace) => {
+      enlace.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        Swal.fire({
+          title: "Vehículos",
+          text: "¿Está seguro de eliminar?",
+          icon: "question",
+          footer: "SENATI - Ingeniería Software",
+          confirmButtonText: "Aceptar",
+          confirmButtonColor: "#2980b9",
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          cancelButtonColor: "#c0392b",
+        }).then((result) => {
+          if (result.isConfirmed){
+            window.location.href = event.target.getAttribute("href")
+          }
+        }); //then()
+        
+      }); //addEventListener
+    }); //forEach
+
+  }); //DOMContentLoaded
+</script>
 
 <%- include('partials/footer') %>

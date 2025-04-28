@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-6 mb-2">
           <div class="form-floating">
-            <input type="text" id="modelo" value="Sportage" name="modelo" class="form-control" placeholder="Modelo" required>
+            <input type="text" id="modelo" name="modelo" class="form-control" placeholder="Modelo" required>
             <label for="form-label">Modelo</label>
           </div>
         </div>
@@ -30,16 +30,16 @@
       <div class="row g-2">
         <div class="col-md-4 mb-2">
           <div class="form-floating">
-            <input type="text" id="color" value="Blanco" name="color" class="form-control" placeholder="Color" required>
+            <input type="text" id="color" name="color" class="form-control" placeholder="Color" required>
             <label for="form-label">Color</label>
           </div>
         </div>
         <div class="col-md-4 mb-2">
           <div class="form-floating">
             <select name="combustible" id="combustible" class="form-select" required>
-              <option value="" disabled>Seleccione</option>
+              <option value="" selected disabled>Seleccione</option>
               <option value="Diesel">Diesel</option>
-              <option value="Gasolina" selected>Gasolina</option>
+              <option value="Gasolina">Gasolina</option>
               <option value="GLP">GLP</option>
               <option value="GNV">GNV</option>
               <option value="Híbrido">Híbrido</option>
@@ -49,7 +49,7 @@
         </div>
         <div class="col-md-4 mb-2">
           <div class="form-floating">
-            <input type="text" value="2025" minlength="4" maxlength="4" pattern="[0-9]+" id="afabricacion" name="afabricacion" class="form-control" placeholder="Año de fabricación" required>
+            <input type="text" minlength="4" maxlength="4" pattern="[0-9]+" id="afabricacion" name="afabricacion" class="form-control" placeholder="Año de fabricación" required>
             <label for="form-label">Año de fabricación</label>
           </div>
         </div>
