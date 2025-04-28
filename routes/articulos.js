@@ -1,6 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
+const multer = require('multer');
+const path = require('path');
+// Ruta principal (página de inicio)
+router.get('/', async (req, res) => {
+  try {
+    // Obtener los primeros productos para mostrar en la página principal
+    const [productos] = await db.query('SELECT * FROM productos LIMIT 10');
+    res.render('index', { productos });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al cargar la página principal');
+  }
+});
+
+// Configuración de multer para subir imágenes
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/'); // Carpeta donde se almacenarán las imágenes
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Nombre único para cada archivo
+  }
+});
+const upload = multer({ storage: storage });
 
 // Redirigir /catalogo a la lógica de /
 router.get('/catalogo', async (req, res) => {
@@ -9,7 +33,7 @@ router.get('/catalogo', async (req, res) => {
 
     let query = `
       SELECT P.id, P.nombre, M.nombre AS marca, C.nombre AS categoria, 
-             T.talla, CO.nombre AS color, P.precio, P.stock
+             T.talla, CO.nombre AS color, P.precio, P.stock, P.imagen
       FROM productos P
       INNER JOIN marcas M ON P.marca_id = M.id
       INNER JOIN categorias C ON P.categoria_id = C.id
@@ -32,19 +56,39 @@ router.get('/catalogo', async (req, res) => {
     const [tallas] = await db.query("SELECT * FROM tallas");
     const [colores] = await db.query("SELECT * FROM colores");
 
-    res.render('index', {
+    res.render('catalogo', {
       productos,
       marcas,
       categorias,
       tallas,
       colores
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al cargar el catálogo');
   }
 });
+
+// Crear nuevo producto con imagen
+router.post('/create', upload.single('imagen'), async (req, res) => {
+  try {
+    const { nombre, marca_id, categoria_id, talla_id, color_id, precio, stock } = req.body;
+    const imagen = req.file ? `/uploads/${req.file.filename}` : null; // Guardar la ruta de la imagen
+
+    await db.query(`
+      INSERT INTO productos (nombre, marca_id, categoria_id, talla_id, color_id, precio, stock, imagen)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, [nombre, marca_id, categoria_id, talla_id, color_id, precio, stock, imagen]);
+
+    res.redirect('/catalogo');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al registrar el producto');
+  }
+});
+
+module.exports = router;
+
 
 // Mostrar formulario de creación
 router.get('/create', async (req, res) => {

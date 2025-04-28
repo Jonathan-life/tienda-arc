@@ -56,7 +56,6 @@ INSERT INTO productos (nombre, marca_id, categoria_id, talla_id, color_id, preci
 ('Pantalón Training', 3, 2, 4, 3, 79.50, 8),
 ('Camiseta Casual', 2, 1, 1, 4, 39.90, 12);
 
--- Buscar camisetas de la marca Adidas, talla M, color blanco
 SELECT 
     p.nombre AS producto,
     m.nombre AS marca,

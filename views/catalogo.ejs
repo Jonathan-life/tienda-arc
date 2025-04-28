@@ -16,7 +16,8 @@
   </header>
 
   <main class="container">
-    <!-- Filtro -->
+
+    <!-- Filtros -->
     <form class="row g-3 mb-4" method="GET" action="/catalogo">
       <div class="col-md-2">
         <label class="form-label">Marca</label>
@@ -27,16 +28,43 @@
           <% }) %>
         </select>
       </div>
-      <!-- Agregar más filtros aquí según sea necesario -->
+      <div class="col-md-2">
+        <label class="form-label">Categoría</label>
+        <select name="categoria" class="form-select">
+          <option value="">Todas</option>
+          <% categorias.forEach(c => { %>
+            <option value="<%= c.nombre %>"><%= c.nombre %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Talla</label>
+        <select name="talla" class="form-select">
+          <option value="">Todas</option>
+          <% tallas.forEach(t => { %>
+            <option value="<%= t.talla %>"><%= t.talla %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Color</label>
+        <select name="color" class="form-select">
+          <option value="">Todos</option>
+          <% colores.forEach(c => { %>
+            <option value="<%= c.nombre %>"><%= c.nombre %></option>
+          <% }) %>
+        </select>
+      </div>
       <div class="col-12 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
       </div>
     </form>
 
     <!-- Tabla de productos -->
-    <table class="table table-bordered">
-      <thead>
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-light">
         <tr>
+          <th>Imagen</th>
           <th>Nombre</th>
           <th>Marca</th>
           <th>Categoría</th>
@@ -50,18 +78,25 @@
         <% if (productos.length > 0) { %>
           <% productos.forEach(p => { %>
             <tr>
+              <td>
+                <% if (p.imagen) { %>
+                  <img src="<%= p.imagen %>" alt="Imagen" style="width: 80px; height: 80px; object-fit: cover;">
+                <% } else { %>
+                  <span class="text-muted">Sin imagen</span>
+                <% } %>
+              </td>
               <td><%= p.nombre %></td>
               <td><%= p.marca %></td>
               <td><%= p.categoria %></td>
               <td><%= p.talla %></td>
               <td><%= p.color %></td>
-              <td>S/ <%= p.precio.toFixed(2) %></td>
+              <td>S/ <%= (parseFloat(p.precio) || 0).toFixed(2) %></td>
               <td><%= p.stock %></td>
             </tr>
           <% }) %>
         <% } else { %>
           <tr>
-            <td colspan="7" class="text-center">No se encontraron productos.</td>
+            <td colspan="8" class="text-center text-muted">No se encontraron productos.</td>
           </tr>
         <% } %>
       </tbody>
