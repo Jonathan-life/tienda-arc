@@ -8,7 +8,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "body-parser": "^2.2.0",
     "ejs": "^3.1.10",
@@ -16,5 +15,17 @@
     "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.0",
     "nodemon": "^3.1.9"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonathan-life/tienda-arc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jonathan-life/tienda-arc/issues"
+  },
+  "homepage": "https://github.com/Jonathan-life/tienda-arc#readme",
+  "description": ""
 }
