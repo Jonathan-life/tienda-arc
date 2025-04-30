@@ -4,7 +4,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 // Importar las rutas de artículos
-const rutaArticulos = require('./routes/articulos'); // Cambié el nombre de 've' a 'articulos'
+const rutaArticulos = require('./routes/articulos'); 
+
+
+
 
 // Iniciar la App
 const app = express();

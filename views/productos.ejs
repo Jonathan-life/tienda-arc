@@ -1,0 +1,37 @@
+<!-- views/productos.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos</title>
+</head>
+<body>
+  <h1>Lista de Productos</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% productos.forEach(producto => { %>
+        <tr>
+          <td><%= producto.id %></td>
+          <td><%= producto.nombre %></td>
+          <td><%= producto.precio %></td>
+          <td><%= producto.stock %></td>
+          <td>
+            <a href="/edit/<%= producto.id %>">Editar</a> | 
+            <a href="/delete/<%= producto.id %>">Eliminar</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

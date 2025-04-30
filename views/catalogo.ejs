@@ -11,7 +11,7 @@
   <header class="bg-light py-3 mb-4 border-bottom">
     <div class="container d-flex justify-content-between">
       <h1 class="h4">Catálogo de Productos</h1>
-      <a href="/" class="btn btn-secondary">Volver al inicio</a>
+      <a href="/index" class="btn btn-secondary">Volver al inicio</a>
     </div>
   </header>
 
@@ -60,47 +60,37 @@
       </div>
     </form>
 
-    <!-- Tabla de productos -->
-    <table class="table table-bordered align-middle text-center">
-      <thead class="table-light">
-        <tr>
-          <th>Imagen</th>
-          <th>Nombre</th>
-          <th>Marca</th>
-          <th>Categoría</th>
-          <th>Talla</th>
-          <th>Color</th>
-          <th>Precio</th>
-          <th>Stock</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if (productos.length > 0) { %>
-          <% productos.forEach(p => { %>
-            <tr>
-              <td>
-                <% if (p.imagen) { %>
-                  <img src="<%= p.imagen %>" alt="Imagen" style="width: 80px; height: 80px; object-fit: cover;">
-                <% } else { %>
+    <!-- Tarjetas de productos -->
+    <% if (productos.length > 0) { %>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <% productos.forEach(p => { %>
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <% if (p.imagen) { %>
+                <img src="<%= p.imagen %>" class="card-img-top" alt="Imagen del producto" style="height: 180px; object-fit: cover;">
+              <% } else { %>
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
                   <span class="text-muted">Sin imagen</span>
-                <% } %>
-              </td>
-              <td><%= p.nombre %></td>
-              <td><%= p.marca %></td>
-              <td><%= p.categoria %></td>
-              <td><%= p.talla %></td>
-              <td><%= p.color %></td>
-              <td>S/ <%= (parseFloat(p.precio) || 0).toFixed(2) %></td>
-              <td><%= p.stock %></td>
-            </tr>
-          <% }) %>
-        <% } else { %>
-          <tr>
-            <td colspan="8" class="text-center text-muted">No se encontraron productos.</td>
-          </tr>
-        <% } %>
-      </tbody>
-    </table>
+                </div>
+              <% } %>
+              <div class="card-body">
+                <h5 class="card-title"><%= p.nombre %></h5>
+                <p class="card-text mb-1"><strong>Marca:</strong> <%= p.marca %></p>
+                <p class="card-text mb-1"><strong>Categoría:</strong> <%= p.categoria %></p>
+                <p class="card-text mb-1"><strong>Talla:</strong> <%= p.talla %></p>
+                <p class="card-text mb-1"><strong>Color:</strong> <%= p.color %></p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span class="fw-bold text-primary">S/ <%= (parseFloat(p.precio) || 0).toFixed(2) %></span>
+                <span class="text-muted">Stock: <%= p.stock %></span>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="alert alert-warning text-center">No se encontraron productos.</div>
+    <% } %>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>

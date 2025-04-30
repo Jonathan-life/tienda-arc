@@ -1,81 +1,106 @@
 <%- include('partials/header') %>
 
-<form action="/edit/<%= vehiculo.idvehiculo %>" id="formulario-registro" autocomplete="off" method="post">
-  <div class="card mt-2">
-    <div class="card-header"><strong>Actualización</strong></div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 mx-auto"> <!-- Limita el ancho y centra -->
+      <form action="/create" id="formulario-producto" autocomplete="off" method="post" enctype="multipart/form-data">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <strong>Registro de Producto</strong>
+          </div>
 
-    <div class="card-body">
-      
-      <div class="row g-2">
-        <div class="col-md-6 mb-2">
-          <div class="form-floating">
-            <select name="marcas" id="marcas" class="form-select" required>
-              <option value="" selected disabled>Seleccione</option>
-              <!-- Las marcas se cargan desde la BD -->
-              <% marcas.forEach(element => { %>
+          <div class="card-body">
+            <div class="row g-2">
+              <div class="col-md-6 mb-2">
+                <div class="form-floating">
+                  <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre del producto" required>
+                  <label for="nombre">Nombre del producto</label>
+                </div>
+              </div>
 
-                <option value="<%= element.idmarca %>" <%= element.idmarca == vehiculo.idmarca ? 'selected':'' %>  ><%= element.marca %></option>
+              <div class="col-md-6 mb-2">
+                <div class="form-floating">
+                  <input type="number" id="precio" name="precio" class="form-control" placeholder="Precio" step="0.01" min="0" required>
+                  <label for="precio">Precio (S/)</label>
+                </div>
+              </div>
+            </div>
 
-              <% }) %>
-            </select>
-            <label for="form-label">Marcas</label>
+            <div class="row g-2">
+              <div class="col-md-3 mb-2">
+                <div class="form-floating">
+                  <select name="marca_id" id="marca_id" class="form-select" required>
+                    <option value="" selected disabled>Seleccione</option>
+                    <% marcas.forEach(m => { %>
+                      <option value="<%= m.id %>"><%= m.nombre %></option>
+                    <% }) %>
+                  </select>
+                  <label for="marca_id">Marca</label>
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <div class="form-floating">
+                  <select name="categoria_id" id="categoria_id" class="form-select" required>
+                    <option value="" selected disabled>Seleccione</option>
+                    <% categorias.forEach(c => { %>
+                      <option value="<%= c.id %>"><%= c.nombre %></option>
+                    <% }) %>
+                  </select>
+                  <label for="categoria_id">Categoría</label>
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <div class="form-floating">
+                  <select name="talla_id" id="talla_id" class="form-select" required>
+                    <option value="" selected disabled>Seleccione</option>
+                    <% tallas.forEach(t => { %>
+                      <option value="<%= t.id %>"><%= t.talla %></option>
+                    <% }) %>
+                  </select>
+                  <label for="talla_id">Talla</label>
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <div class="form-floating">
+                  <select name="color_id" id="color_id" class="form-select" required>
+                    <option value="" selected disabled>Seleccione</option>
+                    <% colores.forEach(c => { %>
+                      <option value="<%= c.id %>"><%= c.nombre %></option>
+                    <% }) %>
+                  </select>
+                  <label for="color_id">Color</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-md-6 mb-2">
+                <div class="form-floating">
+                  <input type="number" id="stock" name="stock" class="form-control" placeholder="Stock" min="0" required>
+                  <label for="stock">Stock</label>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-2">
+                <label for="imagen" class="form-label">Imagen del producto</label>
+                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer text-end">
+            <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            <a href="/" class="btn btn-secondary btn-sm">Cancelar</a>
           </div>
         </div>
-        <div class="col-md-6 mb-2">
-          <div class="form-floating">
-            <input type="text" id="modelo" value="<%= vehiculo.modelo %>" name="modelo" class="form-control" placeholder="Modelo" required>
-            <label for="form-label">Modelo</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row g-2">
-        <div class="col-md-4 mb-2">
-          <div class="form-floating">
-            <input type="text" id="color" value="<%= vehiculo.color %>" name="color" class="form-control" placeholder="Color" required>
-            <label for="form-label">Color</label>
-          </div>
-        </div>
-        <div class="col-md-4 mb-2">
-          <div class="form-floating">
-            <select name="combustible" id="combustible" class="form-select" required>
-              <option value="">Seleccione</option>
-              <option value="Diesel"   <%= vehiculo.combustible == 'Diesel' ? 'selected':'' %>  >Diesel</option>
-              <option value="Gasolina" <%= vehiculo.combustible == 'Gasolina' ? 'selected':'' %> >Gasolina</option>
-              <option value="GLP"      <%= vehiculo.combustible == 'GLP' ? 'selected':'' %> >GLP</option>
-              <option value="GNV"      <%= vehiculo.combustible == 'GNV' ? 'selected':'' %> >GNV</option>
-              <option value="Híbrido"  <%= vehiculo.combustible == 'Híbrido' ? 'selected':'' %> >Híbrido</option>
-            </select>
-            <label for="form-label">Combustible</label>
-          </div>
-        </div>
-        <div class="col-md-4 mb-2">
-          <div class="form-floating">
-            <input type="text" minlength="4" value="<%= vehiculo.afabricacion %>" maxlength="4" pattern="[0-9]+" id="afabricacion" name="afabricacion" class="form-control" placeholder="Año de fabricación" required>
-            <label for="form-label">Año de fabricación</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-floating">
-            <select name="condicion" id="condicion" class="form-select" required>
-              <option value="Nuevo" <%= vehiculo.condicion == 'Nuevo' ? 'selected':'' %> >Nuevo</option>
-              <option value="Seminuevo" <%= vehiculo.condicion == 'Seminuevo' ? 'selected':'' %> >Seminuevo</option>
-            </select>
-            <label for="form-label">Condición</label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-footer">
-      <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
-      <a href="/" class="btn btn-sm btn-secondary">Cancelar</a>
+      </form>
     </div>
   </div>
-</form>
+</div>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
