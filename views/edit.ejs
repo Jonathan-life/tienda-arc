@@ -2,25 +2,25 @@
 
 <div class="container mt-4">
   <div class="row">
-    <div class="col-md-8 mx-auto"> <!-- Limita el ancho y centra -->
-      <form action="/create" id="formulario-producto" autocomplete="off" method="post" enctype="multipart/form-data">
+    <div class="col-md-8 mx-auto">
+      <form action="/edit/<%= producto.id %>" id="formulario-producto" autocomplete="off" method="post" enctype="multipart/form-data">
         <div class="card shadow-sm">
           <div class="card-header bg-primary text-white">
-            <strong>Registro de Producto</strong>
+            <strong>Editar Producto</strong>
           </div>
 
           <div class="card-body">
             <div class="row g-2">
               <div class="col-md-6 mb-2">
                 <div class="form-floating">
-                  <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre del producto" required>
+                  <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre del producto" value="<%= producto.nombre %>" required>
                   <label for="nombre">Nombre del producto</label>
                 </div>
               </div>
 
               <div class="col-md-6 mb-2">
                 <div class="form-floating">
-                  <input type="number" id="precio" name="precio" class="form-control" placeholder="Precio" step="0.01" min="0" required>
+                  <input type="number" id="precio" name="precio" class="form-control" placeholder="Precio" step="0.01" min="0" value="<%= producto.precio %>" required>
                   <label for="precio">Precio (S/)</label>
                 </div>
               </div>
@@ -30,9 +30,9 @@
               <div class="col-md-3 mb-2">
                 <div class="form-floating">
                   <select name="marca_id" id="marca_id" class="form-select" required>
-                    <option value="" selected disabled>Seleccione</option>
+                    <option value="" disabled>Seleccione</option>
                     <% marcas.forEach(m => { %>
-                      <option value="<%= m.id %>"><%= m.nombre %></option>
+                      <option value="<%= m.id %>" <%= m.id === producto.marca_id ? 'selected' : '' %>><%= m.nombre %></option>
                     <% }) %>
                   </select>
                   <label for="marca_id">Marca</label>
@@ -42,9 +42,9 @@
               <div class="col-md-3 mb-2">
                 <div class="form-floating">
                   <select name="categoria_id" id="categoria_id" class="form-select" required>
-                    <option value="" selected disabled>Seleccione</option>
+                    <option value="" disabled>Seleccione</option>
                     <% categorias.forEach(c => { %>
-                      <option value="<%= c.id %>"><%= c.nombre %></option>
+                      <option value="<%= c.id %>" <%= c.id === producto.categoria_id ? 'selected' : '' %>><%= c.nombre %></option>
                     <% }) %>
                   </select>
                   <label for="categoria_id">Categoría</label>
@@ -54,9 +54,9 @@
               <div class="col-md-3 mb-2">
                 <div class="form-floating">
                   <select name="talla_id" id="talla_id" class="form-select" required>
-                    <option value="" selected disabled>Seleccione</option>
+                    <option value="" disabled>Seleccione</option>
                     <% tallas.forEach(t => { %>
-                      <option value="<%= t.id %>"><%= t.talla %></option>
+                      <option value="<%= t.id %>" <%= t.id === producto.talla_id ? 'selected' : '' %>><%= t.talla %></option>
                     <% }) %>
                   </select>
                   <label for="talla_id">Talla</label>
@@ -66,9 +66,9 @@
               <div class="col-md-3 mb-2">
                 <div class="form-floating">
                   <select name="color_id" id="color_id" class="form-select" required>
-                    <option value="" selected disabled>Seleccione</option>
+                    <option value="" disabled>Seleccione</option>
                     <% colores.forEach(c => { %>
-                      <option value="<%= c.id %>"><%= c.nombre %></option>
+                      <option value="<%= c.id %>" <%= c.id === producto.color_id ? 'selected' : '' %>><%= c.nombre %></option>
                     <% }) %>
                   </select>
                   <label for="color_id">Color</label>
@@ -79,20 +79,24 @@
             <div class="row g-2">
               <div class="col-md-6 mb-2">
                 <div class="form-floating">
-                  <input type="number" id="stock" name="stock" class="form-control" placeholder="Stock" min="0" required>
+                  <input type="number" id="stock" name="stock" class="form-control" placeholder="Stock" min="0" value="<%= producto.stock %>" required>
                   <label for="stock">Stock</label>
                 </div>
               </div>
 
               <div class="col-md-6 mb-2">
-                <label for="imagen" class="form-label">Imagen del producto</label>
-                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*" required>
+                <label for="imagen" class="form-label">Imagen del producto (opcional)</label>
+                <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*">
+                <% if (producto.imagen) { %>
+                  <small class="text-muted">Imagen actual:</small><br>
+                  <img src="<%= producto.imagen %>" alt="Imagen actual" width="100">
+                <% } %>
               </div>
             </div>
           </div>
 
           <div class="card-footer text-end">
-            <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+            <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
             <a href="/" class="btn btn-secondary btn-sm">Cancelar</a>
           </div>
         </div>
@@ -100,6 +104,7 @@
     </div>
   </div>
 </div>
+
 
 
 <script>

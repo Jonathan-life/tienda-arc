@@ -130,42 +130,33 @@ router.get('/edit/:id', async (req, res) => {
   }
 });
 
-// Actualizar producto con imagen
-router.post('/edit/:id', upload.single('imagen'), async (req, res) => {
+router.get('/edit/:id', async (req, res) => {
   try {
-    const { nombre, marca_id, categoria_id, talla_id, color_id, precio, stock } = req.body;
     const productoId = req.params.id;
 
-    let query = `
-      UPDATE productos 
-      SET nombre=?, marca_id=?, categoria_id=?, talla_id=?, color_id=?, precio=?, stock=?
-    `;
-    const params = [nombre, marca_id, categoria_id, talla_id, color_id, precio, stock];
+    // Obtener el producto con su información actual
+    const [producto] = await db.query('SELECT * FROM productos WHERE id = ?', [productoId]);
 
-    if (req.file) {
-      const nuevaImagen = `/uploads/${req.file.filename}`;
-      query += `, imagen=?`;
-      params.push(nuevaImagen);
-
-      // Eliminar imagen anterior del servidor (opcional)
-      const [productoAntiguo] = await db.query("SELECT imagen FROM productos WHERE id = ?", [productoId]);
-      if (productoAntiguo.length > 0 && productoAntiguo[0].imagen) {
-        const rutaImagen = path.join(__dirname, '../public', productoAntiguo[0].imagen);
-        fs.unlink(rutaImagen, (err) => {
-          if (err) console.warn('No se pudo eliminar imagen anterior:', err.message);
-        });
-      }
+    if (producto.length === 0) {
+      return res.status(404).send('Producto no encontrado');
     }
 
-    query += ` WHERE id=?`;
-    params.push(productoId);
+    // Obtener listas necesarias para los selects (marcas, categorías, etc.)
+    const [marcas] = await db.query('SELECT * FROM marcas');
+    const [categorias] = await db.query('SELECT * FROM categorias');
+    const [tallas] = await db.query('SELECT * FROM tallas');
+    const [colores] = await db.query('SELECT * FROM colores');
 
-    await db.query(query, params);
-
-    res.redirect('/');
+    res.render('editar_producto', {
+      producto: producto[0],
+      marcas,
+      categorias,
+      tallas,
+      colores
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error al actualizar el producto');
+    res.status(500).send('Error al cargar el formulario de edición');
   }
 });
 
