@@ -1,39 +1,35 @@
-CREATE DATABASE tienda_ropa;
-USE tienda_ropa;
-
+CREATE DATABASE IF NOT EXISTS tienda-ropa;
+USE tienda-ropa;
 
 CREATE TABLE marcas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL
-);
-
+) ENGINE=InnoDB;
 
 INSERT INTO marcas (nombre) VALUES ('Nike'), ('Adidas'), ('Puma');
-
 
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL
-);
+) ENGINE=InnoDB ;
 
 INSERT INTO categorias (nombre) VALUES ('Camiseta'), ('Pantalón'), ('Chaqueta');
-
 
 CREATE TABLE tallas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     talla VARCHAR(10) NOT NULL
-);
+) ENGINE=InnoDB ;
 
 INSERT INTO tallas (talla) VALUES ('S'), ('M'), ('L'), ('XL');
-
 
 CREATE TABLE colores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
-);
+) ENGINE=InnoDB ;
 
 INSERT INTO colores (nombre) VALUES ('Negro'), ('Blanco'), ('Rojo'), ('Azul');
 
+DROP TABLE IF EXISTS productos;
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -41,14 +37,14 @@ CREATE TABLE productos (
     categoria_id INT,
     talla_id INT,
     color_id INT,
-    precio DECIMAL(10, 2),
+    precio DECIMAL(10,2),
     stock INT,
+    imagen varchar(255) DEFAULT NULL,
     FOREIGN KEY (marca_id) REFERENCES marcas(id),
     FOREIGN KEY (categoria_id) REFERENCES categorias(id),
     FOREIGN KEY (talla_id) REFERENCES tallas(id),
     FOREIGN KEY (color_id) REFERENCES colores(id)
-);
-
+) ENGINE=InnoDB ;
 
 INSERT INTO productos (nombre, marca_id, categoria_id, talla_id, color_id, precio, stock) VALUES
 ('Camiseta Deportiva', 1, 1, 2, 1, 59.99, 10),

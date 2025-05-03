@@ -89,15 +89,30 @@ router.get('/create', async (req, res) => {
 router.post('/create', upload.single('imagen'), async (req, res) => {
   try {
     const { nombre, marca_id, categoria_id, talla_id, color_id, precio, stock } = req.body;
-    const imagen = req.file ? `/uploads/${req.file.filename}` : null;
+
+    let imagen = null;
+
+    // Verificar si se subió una imagen válida
+    if (req.file) {
+      const ext = path.extname(req.file.originalname).toLowerCase();
+      const extensionesPermitidas = ['.jpg', '.jpeg', '.png', '.webp'];
+
+      if (!extensionesPermitidas.includes(ext)) {
+        // Eliminar el archivo no válido
+        fs.unlinkSync(req.file.path);
+        return res.status(400).send('Formato de imagen no válido. Usa JPG, PNG, JPEG o WEBP.');
+      }
+
+      imagen = `/uploads/${req.file.filename}`;
+    }
 
     const result = await db.query(`
       INSERT INTO productos (nombre, marca_id, categoria_id, talla_id, color_id, precio, stock, imagen)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `, [nombre, marca_id, categoria_id, talla_id, color_id, precio, stock, imagen]);
 
-    const productoId = result.insertId;  // Obtén el ID del producto insertado
-    res.redirect(`/edit/${productoId}`);  // Redirige a la página de edición del producto
+    // Mensaje de éxito o redirigir a otra página, como la lista de productos
+    res.send('Producto creado exitosamente');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al registrar el producto');
@@ -105,31 +120,6 @@ router.post('/create', upload.single('imagen'), async (req, res) => {
 });
 
 // Mostrar formulario de edición
-router.get('/edit/:id', async (req, res) => {
-  try {
-    const [producto] = await db.query("SELECT * FROM productos WHERE id = ?", [req.params.id]);
-    const [marcas] = await db.query("SELECT * FROM marcas");
-    const [categorias] = await db.query("SELECT * FROM categorias");
-    const [tallas] = await db.query("SELECT * FROM tallas");
-    const [colores] = await db.query("SELECT * FROM colores");
-
-    if (producto.length > 0) {
-      res.render('edit', {
-        producto: producto[0],
-        marcas,
-        categorias,
-        tallas,
-        colores
-      });
-    } else {
-      res.redirect('/');
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error al cargar la edición');
-  }
-});
-
 router.get('/edit/:id', async (req, res) => {
   try {
     const productoId = req.params.id;
@@ -147,7 +137,8 @@ router.get('/edit/:id', async (req, res) => {
     const [tallas] = await db.query('SELECT * FROM tallas');
     const [colores] = await db.query('SELECT * FROM colores');
 
-    res.render('editar_producto', {
+    res.render('edit', {
+
       producto: producto[0],
       marcas,
       categorias,
@@ -159,6 +150,48 @@ router.get('/edit/:id', async (req, res) => {
     res.status(500).send('Error al cargar el formulario de edición');
   }
 });
+
+// Actualizar producto
+router.post('/edit/:id', upload.single('imagen'), async (req, res) => {
+  try {
+    const productoId = req.params.id;
+    const { nombre, marca_id, categoria_id, talla_id, color_id, precio, stock } = req.body;
+
+    // Obtener el producto actual para conservar la imagen si no se cambia
+    const [productoActual] = await db.query('SELECT imagen FROM productos WHERE id = ?', [productoId]);
+
+    let nuevaImagen = productoActual[0].imagen;
+
+    if (req.file) {
+      const imagenAnterior = productoActual[0].imagen;
+
+      // Si existe imagen anterior, eliminarla del servidor
+      if (imagenAnterior) {
+        const rutaImagenAnterior = path.join(__dirname, '../public', imagenAnterior);
+        fs.unlink(rutaImagenAnterior, (err) => {
+          if (err) console.warn('No se pudo eliminar la imagen anterior:', err.message);
+        });
+      }
+
+      // Guardar nueva ruta de imagen
+      nuevaImagen = `/uploads/${req.file.filename}`;
+    }
+
+    // Actualizar el producto en la base de datos
+    await db.query(`
+      UPDATE productos SET 
+        nombre = ?, marca_id = ?, categoria_id = ?, talla_id = ?, 
+        color_id = ?, precio = ?, stock = ?, imagen = ?
+      WHERE id = ?
+    `, [nombre, marca_id, categoria_id, talla_id, color_id, precio, stock, nuevaImagen, productoId]);
+
+    res.redirect('/productos');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al actualizar el producto');
+  }
+});
+
 
 // Eliminar producto
 router.get('/delete/:id', async (req, res) => {
